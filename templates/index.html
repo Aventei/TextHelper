@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Your existing head content here -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TextHelper</title>
+    <style>
+        /* Your existing CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+        }
+        #chat-container {
+            width: 80%;
+            max-width: 600px; /* Adjust maximum width as needed */
+            background-color: #f0f0f0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 70vh; /* Set fixed height for chat container */
+        }
+        #chat-history {
+            padding: 20px;
+            flex-grow: 1;
+            overflow: auto; /* Allow overflow for scrollability */
+        }
+        #user-input-container {
+            display: flex;
+            justify-content: flex-end;
+            padding: 10px;
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+        }
+        #user-input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-top: 1px solid #ddd;
+            border-bottom-left-radius: 8px;
+        }
+        #submit-button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-top-right-radius: 8px;
+        }
+        .user-prompt {
+            align-self: flex-end;
+            background-color: #c4e0fc; /* Light blue background */
+            color: black;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 10px;
+            max-width: 70%; /* Limit width for user messages */
+            word-wrap: break-word; /* Ensure long messages wrap */
+        }
+        .bot-response-container {
+            align-self: flex-start;
+            margin: 10px;
+        }
+        .bot-response {
+            background-color: #f0f0f0; /* Light grey background */
+            color: black;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 70%; /* Limit width for bot messages */
+            word-wrap: break-word; /* Ensure long messages wrap */
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .bot-response.disabled {
+            background-color: #ccc; /* Grey out the option */
+        }
+        .bot-response:hover {
+            background-color: #e0e0e0; /* Light grey background on hover */
+        }
+        /* Styling for logo */
+        .logo {
+            position: absolute;
+            top: 0; /* Adjust the top position as needed */
+            right: 10px;
+            width: 100px; /* Adjust width as needed */
+            height: auto; /* Maintain aspect ratio */
+            z-index: 10; /* Ensure the logo is on top */
+        }
+        /* Styling for top border */
+        .top-border {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 65px; /* Adjust the height of the border */
+            background-color: lightblue;
+            z-index: 5; /* Ensure the border is below the logo */
+        }
+        .response-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Light blue border at the top -->
+    <div class="top-border"></div>
+    
+    <!-- Your logo image -->
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
+    
+    <!-- Your existing chat container and input -->
+    <div id="chat-container">
+        <div id="chat-history"></div>
+        <div id="user-input-container">
+            <input type="text" id="user-input" placeholder="Enter your message here">
+            <button id="submit-button">Send</button>
+        </div>
+    </div>
+    
+    <!-- Your existing script for chat functionality -->
+    <script>
+        // Function to handle sending user input and displaying bot responses
+        function sendUserInput() {
+            var userInput = document.getElementById('user-input').value.trim();
+            if (userInput !== '') {
+                // Clear input field
+                document.getElementById('user-input').value = '';
+    
+                // Create user prompt element and add to chat history
+                var userPrompt = document.createElement('div');
+                userPrompt.className = 'user-prompt';
+                userPrompt.textContent = userInput;
+                document.getElementById('chat-history').appendChild(userPrompt);
+    
+                // Send user input to server
+                fetch('/get_response', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ user_input: userInput })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Process responses from server
+                    Object.keys(data).forEach(style => {
+                        var botResponseContainer = document.createElement('div');
+                        botResponseContainer.className = 'bot-response-container';
+                        
+                        var botResponse = document.createElement('div');
+                        botResponse.className = 'bot-response';
+                        
+                        // Create label element
+                        var label = document.createElement('div');
+                        label.className = 'response-label';
+                        label.textContent = style;
+                        botResponse.appendChild(label);
+                        
+                        // Create response element
+                        var responseText = document.createElement('div');
+                        responseText.textContent = data[style]['response'];
+                        botResponse.appendChild(responseText);
+                        
+                        // Add click event listener to select response
+                        botResponse.addEventListener('click', function() {
+                            // Remove other bot responses
+                            var allBotResponses = document.querySelectorAll('.bot-response');
+                            allBotResponses.forEach(response => {
+                                if (response !== botResponse) {
+                                    response.parentNode.removeChild(response);
+                                } else {
+                                    response.classList.add('disabled');
+                                }
+                            });
+    
+                            // Remove all previous bot responses
+                            var chatHistory = document.getElementById('chat-history');
+                            while (chatHistory.firstChild) {
+                                chatHistory.removeChild(chatHistory.firstChild);
+                            }
+    
+                            // Add selected bot response
+                            var selectedResponse = document.createElement('div');
+                            selectedResponse.className = 'bot-response';
+                            selectedResponse.appendChild(label.cloneNode(true));
+                            selectedResponse.appendChild(responseText.cloneNode(true));
+                            document.getElementById('chat-history').appendChild(selectedResponse);
+                        });
+                        
+                        botResponseContainer.appendChild(botResponse);
+                        document.getElementById('chat-history').appendChild(botResponseContainer);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        }
+    
+        // Event listener for the "Send" button click
+        document.getElementById('submit-button').addEventListener('click', function() {
+            sendUserInput();
+        });
+    
+        // Event listener for "Enter" key press
+        document.getElementById('user-input').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' || event.key === 'Return') {
+                event.preventDefault(); // Prevent the default behavior of submitting the form
+                sendUserInput(); // Call the function to send user input and display bot responses
+            }
+        });
+    </script>
+    
