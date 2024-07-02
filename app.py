@@ -4,7 +4,7 @@ from openai import OpenAI
 app = Flask(__name__)
 
 # Set your OpenAI API key
-client = OpenAI(api_key='sk-proj-ZY6QOYGkZIXnxUlwkTGwT3BlbkFJGyUkfmVq5ZkLEteXxasY')
+client = OpenAI(api_key='place_key_here')
 
 def generate_response(prompt, style):
     if style == 'Regular:':
