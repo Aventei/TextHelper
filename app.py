@@ -4,7 +4,7 @@ from openai import OpenAI
 app = Flask(__name__)
 
 # Set your OpenAI API key
-client = OpenAI(api_key='place_key_here')
+client = OpenAI(api_key='apikeyhere')
 
 def generate_response(prompt, style):
     if style == 'Regular:':
@@ -38,6 +38,10 @@ def generate_response(prompt, style):
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
 
 @app.route('/get_response', methods=['POST'])
 def get_response():
