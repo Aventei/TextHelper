@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Your existing head content here -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About TextHelper AI</title>
+    <style>
+        /* Your existing CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            background: url("{{ url_for('static', filename='background.jpg') }}") no-repeat center center fixed; 
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+        }
+        #about-container {
+            width: 80%;
+            max-width: 600px; /* Adjust maximum width as needed */
+            background-color: #f0f0f0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            padding: 20px;
+            text-align: center;
+        }
+        /* Styling for logo */
+        .logo {
+            position: absolute;
+            top: 0; /* Adjust the top position as needed */
+            right: 10px;
+            width: 100px; /* Adjust width as needed */
+            height: auto; /* Maintain aspect ratio */
+            z-index: 10; /* Ensure the logo is on top */
+        }
+        /* Styling for top border */
+        .top-border {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 65px; /* Adjust the height of the border */
+            background-color: lightblue;
+            z-index: 5; /* Ensure the border is below the logo */
+        }
+        .about-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .about-content {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.5;
+        }
+        .back-link {
+            margin-top: 20px;
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+        .back-link:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <!-- Light blue border at the top -->
+    <div class="top-border"></div>
+    
+    <!-- Your logo image -->
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
+    
+    <!-- About content -->
+    <div id="about-container">
+        <div class="about-title">About TextHelper AI</div>
+        <div class="about-content">
+            <p>TextHelper AI is your friendly assistant for crafting perfect responses in various styles. Whether you need a casual, professional, or teenage-like response, TextHelper AI is here to help!</p>
+            <p>Our mission is to make your communication easier and more effective by providing tailored responses that suit your needs.</p>
+        </div>
+        <a href="/" class="back-link">Back to Chat</a>
+    </div>
+</body>
+</html>
