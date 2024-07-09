@@ -1,6 +1,4 @@
 
-Here's a polished version of your README for GitHub:
-
 TextHelper AI
 NOTICE:
 Place your personal OpenAI API key in app.py for the application to function.
