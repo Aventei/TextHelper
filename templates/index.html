@@ -9,7 +9,8 @@
         /* Your existing CSS styles here */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            background: url("{{ url_for('static', filename='background.jpg') }}") no-repeat center center fixed; 
+            background-size: cover;
             margin: 0;
             padding: 0;
             display: flex;
@@ -86,6 +87,8 @@
         .bot-response:hover {
             background-color: #e0e0e0; /* Light grey background on hover */
         }
+        /* Styling
+        }
         /* Styling for logo */
         .logo {
             position: absolute;
@@ -109,6 +112,25 @@
             font-weight: bold;
             margin-bottom: 5px;
         }
+        .welcome-message {
+            color: #555;
+            font-style: italic;
+        }
+        /* Styling for the about link */
+        .about-link {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+        .about-link:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -120,28 +142,36 @@
     
     <!-- Your existing chat container and input -->
     <div id="chat-container">
-        <div id="chat-history"></div>
+        <div id="chat-history">
+            <div class="welcome-message">Welcome to TextHelper AI! What do you have trouble responding to?</div>
+        </div>
         <div id="user-input-container">
             <input type="text" id="user-input" placeholder="Enter your message here">
             <button id="submit-button">Send</button>
         </div>
     </div>
-    
+    <a href="/about" class="about-link">About TextHelper AI</a>
     <!-- Your existing script for chat functionality -->
     <script>
-        // Function to handle sending user input and displaying bot responses
+        // Function to handle sending user input
         function sendUserInput() {
             var userInput = document.getElementById('user-input').value.trim();
             if (userInput !== '') {
                 // Clear input field
                 document.getElementById('user-input').value = '';
-    
+
+                // Remove welcome message on first input
+                var welcomeMessage = document.querySelector('.welcome-message');
+                if (welcomeMessage) {
+                    welcomeMessage.remove();
+                }
+
                 // Create user prompt element and add to chat history
                 var userPrompt = document.createElement('div');
                 userPrompt.className = 'user-prompt';
                 userPrompt.textContent = userInput;
                 document.getElementById('chat-history').appendChild(userPrompt);
-    
+
                 // Send user input to server
                 fetch('/get_response', {
                     method: 'POST',
@@ -182,13 +212,13 @@
                                     response.classList.add('disabled');
                                 }
                             });
-    
+
                             // Remove all previous bot responses
                             var chatHistory = document.getElementById('chat-history');
                             while (chatHistory.firstChild) {
                                 chatHistory.removeChild(chatHistory.firstChild);
                             }
-    
+
                             // Add selected bot response
                             var selectedResponse = document.createElement('div');
                             selectedResponse.className = 'bot-response';
@@ -204,18 +234,14 @@
                 .catch(error => console.error('Error:', error));
             }
         }
-    
-        // Event listener for the "Send" button click
-        document.getElementById('submit-button').addEventListener('click', function() {
-            sendUserInput();
-        });
-    
-        // Event listener for "Enter" key press
+
+        document.getElementById('submit-button').addEventListener('click', sendUserInput);
+
         document.getElementById('user-input').addEventListener('keydown', function(event) {
-            if (event.key === 'Enter' || event.key === 'Return') {
-                event.preventDefault(); // Prevent the default behavior of submitting the form
-                sendUserInput(); // Call the function to send user input and display bot responses
+            if (event.key === 'Enter') {
+                sendUserInput();
             }
         });
     </script>
-    
+</body>
+</html>
