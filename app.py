@@ -3,8 +3,7 @@ from openai import OpenAI
 
 app = Flask(__name__)
 
-# Set your OpenAI API key
-client = OpenAI(api_key='apikeyhere')
+client = OpenAI(api_key='api')
 
 def generate_response(prompt, style):
     if style == 'Regular:':
@@ -27,7 +26,6 @@ def generate_response(prompt, style):
         ]
     )
     
-    # Filter out responses that mention AI
     filtered_responses = []
     for choice in response.choices:
         if "AI" not in choice.message.content:
