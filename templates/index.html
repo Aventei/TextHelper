@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Your existing head content here -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TextHelper</title>
+
     <style>
-        /* Your existing CSS styles here */
         body {
             font-family: Arial, sans-serif;
             background: url("{{ url_for('static', filename='background.jpg') }}") no-repeat center center fixed; 
@@ -21,19 +20,19 @@
         }
         #chat-container {
             width: 80%;
-            max-width: 600px; /* Adjust maximum width as needed */
+            max-width: 600px; 
             background-color: #f0f0f0;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            height: 70vh; /* Set fixed height for chat container */
+            height: 70vh; 
         }
         #chat-history {
             padding: 20px;
             flex-grow: 1;
-            overflow: auto; /* Allow overflow for scrollability */
+            overflow: auto; 
         }
         #user-input-container {
             display: flex;
@@ -59,54 +58,52 @@
         }
         .user-prompt {
             align-self: flex-end;
-            background-color: #c4e0fc; /* Light blue background */
+            background-color: #c4e0fc; 
             color: black;
             padding: 10px;
             margin: 10px;
             border-radius: 10px;
-            max-width: 70%; /* Limit width for user messages */
-            word-wrap: break-word; /* Ensure long messages wrap */
+            max-width: 70%; 
+            word-wrap: break-word; 
         }
         .bot-response-container {
             align-self: flex-start;
             margin: 10px;
         }
         .bot-response {
-            background-color: #f0f0f0; /* Light grey background */
+            background-color: #f0f0f0; 
             color: black;
             padding: 10px;
             border-radius: 10px;
-            max-width: 70%; /* Limit width for bot messages */
-            word-wrap: break-word; /* Ensure long messages wrap */
+            max-width: 70%; 
+            word-wrap: break-word; 
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
         .bot-response.disabled {
-            background-color: #ccc; /* Grey out the option */
+            background-color: #ccc; 
         }
         .bot-response:hover {
-            background-color: #e0e0e0; /* Light grey background on hover */
+            background-color: #e0e0e0; 
         }
-        /* Styling
-        }
-        /* Styling for logo */
+
         .logo {
             position: absolute;
-            top: 0; /* Adjust the top position as needed */
+            top: 0; 
             right: 10px;
-            width: 100px; /* Adjust width as needed */
-            height: auto; /* Maintain aspect ratio */
-            z-index: 10; /* Ensure the logo is on top */
+            width: 100px; 
+            height: auto; 
+            z-index: 10; 
         }
-        /* Styling for top border */
+
         .top-border {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            height: 65px; /* Adjust the height of the border */
+            height: 65px; 
             background-color: lightblue;
-            z-index: 5; /* Ensure the border is below the logo */
+            z-index: 5; 
         }
         .response-label {
             font-weight: bold;
@@ -116,7 +113,7 @@
             color: #555;
             font-style: italic;
         }
-        /* Styling for the about link */
+
         .about-link {
             position: absolute;
             bottom: 10px;
@@ -134,13 +131,10 @@
     </style>
 </head>
 <body>
-    <!-- Light blue border at the top -->
     <div class="top-border"></div>
     
-    <!-- Your logo image -->
     <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
     
-    <!-- Your existing chat container and input -->
     <div id="chat-container">
         <div id="chat-history">
             <div class="welcome-message">Welcome to TextHelper AI! What do you have trouble responding to?</div>
@@ -151,28 +145,22 @@
         </div>
     </div>
     <a href="/about" class="about-link">About TextHelper AI</a>
-    <!-- Your existing script for chat functionality -->
+
     <script>
-        // Function to handle sending user input
         function sendUserInput() {
             var userInput = document.getElementById('user-input').value.trim();
             if (userInput !== '') {
-                // Clear input field
                 document.getElementById('user-input').value = '';
 
-                // Remove welcome message on first input
                 var welcomeMessage = document.querySelector('.welcome-message');
                 if (welcomeMessage) {
                     welcomeMessage.remove();
                 }
-
-                // Create user prompt element and add to chat history
                 var userPrompt = document.createElement('div');
                 userPrompt.className = 'user-prompt';
                 userPrompt.textContent = userInput;
                 document.getElementById('chat-history').appendChild(userPrompt);
 
-                // Send user input to server
                 fetch('/get_response', {
                     method: 'POST',
                     headers: {
@@ -182,7 +170,7 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    // Process responses from server
+
                     Object.keys(data).forEach(style => {
                         var botResponseContainer = document.createElement('div');
                         botResponseContainer.className = 'bot-response-container';
@@ -190,20 +178,16 @@
                         var botResponse = document.createElement('div');
                         botResponse.className = 'bot-response';
                         
-                        // Create label element
                         var label = document.createElement('div');
                         label.className = 'response-label';
                         label.textContent = style;
                         botResponse.appendChild(label);
-                        
-                        // Create response element
+
                         var responseText = document.createElement('div');
                         responseText.textContent = data[style]['response'];
                         botResponse.appendChild(responseText);
-                        
-                        // Add click event listener to select response
+
                         botResponse.addEventListener('click', function() {
-                            // Remove other bot responses
                             var allBotResponses = document.querySelectorAll('.bot-response');
                             allBotResponses.forEach(response => {
                                 if (response !== botResponse) {
@@ -213,13 +197,12 @@
                                 }
                             });
 
-                            // Remove all previous bot responses
+
                             var chatHistory = document.getElementById('chat-history');
                             while (chatHistory.firstChild) {
                                 chatHistory.removeChild(chatHistory.firstChild);
                             }
 
-                            // Add selected bot response
                             var selectedResponse = document.createElement('div');
                             selectedResponse.className = 'bot-response';
                             selectedResponse.appendChild(label.cloneNode(true));
