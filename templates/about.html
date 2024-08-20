@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Your existing head content here -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About TextHelper AI</title>
     <style>
-        /* Your existing CSS styles here */
         body {
             font-family: Arial, sans-serif;
             background: url("{{ url_for('static', filename='background.jpg') }}") no-repeat center center fixed; 
@@ -21,7 +19,7 @@
         }
         #about-container {
             width: 80%;
-            max-width: 600px; /* Adjust maximum width as needed */
+            max-width: 600px; 
             background-color: #f0f0f0;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
@@ -29,24 +27,23 @@
             padding: 20px;
             text-align: center;
         }
-        /* Styling for logo */
         .logo {
             position: absolute;
-            top: 0; /* Adjust the top position as needed */
+            top: 0; 
             right: 10px;
-            width: 100px; /* Adjust width as needed */
-            height: auto; /* Maintain aspect ratio */
-            z-index: 10; /* Ensure the logo is on top */
+            width: 100px; 
+            height: auto; 
+            z-index: 10; 
         }
-        /* Styling for top border */
+        
         .top-border {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            height: 65px; /* Adjust the height of the border */
+            height: 65px; 
             background-color: lightblue;
-            z-index: 5; /* Ensure the border is below the logo */
+            z-index: 5; 
         }
         .about-title {
             font-size: 24px;
@@ -73,19 +70,16 @@
     </style>
 </head>
 <body>
-    <!-- Light blue border at the top -->
+
     <div class="top-border"></div>
     
-    <!-- Your logo image -->
     <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
     
-    <!-- About content -->
     <div id="about-container">
         <div class="about-title">About TextHelper AI</div>
         <div class="about-content">
-            <p>TextHelper AI is your personal assistant for making perfect responses in various styles. If you need a casual, professional, or teenage-like response, TextHelper AI is here to help!</p>
-            <p>Our mission is to make your communication easier and more effective by providing  responses that suit your needs.</p>
-            <p>Credits: Rhys Paulk</p>
+            <p>TextHelper AI is your friendly assistant for crafting perfect responses in various styles. Whether you need a casual, professional, or teenage-like response, TextHelper AI is here to help!</p>
+            <p>Our mission is to make your communication easier and more effective by providing tailored responses that suit your needs.</p>
         </div>
         <a href="/" class="back-link">Back to Chat</a>
     </div>
