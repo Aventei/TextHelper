@@ -3,7 +3,7 @@ from openai import OpenAI
 
 app = Flask(__name__)
 
-client = OpenAI(api_key='api')
+client = OpenAI(api_key='placeapikey')
 
 def generate_response(prompt, style):
     if style == 'Regular:':
